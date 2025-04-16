@@ -1,0 +1,12 @@
+---
+import "~/styles/global.css";
+---
+
+<html lang={Astro.currentLocale}>
+  <head>
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
