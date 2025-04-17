@@ -3,17 +3,27 @@ import sitemap from "@astrojs/sitemap";
 // @ts-check
 import { defineConfig } from "astro/config";
 
-import tailwindcss from "@tailwindcss/vite";
+
+import icon from "astro-icon";
+
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://m01nm01n.github.io",
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap(), icon()],
   i18n: {
     locales: ["ja", "en"],
     defaultLocale: "ja",
   },
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  experimental:
+  {
+    fonts: [
+      /* {
+        provider: fontProviders.google(),
+        name: "Roboto",
+        cssVariable: "--font-roboto"
+      } */
+    ]
+  }
+
 });

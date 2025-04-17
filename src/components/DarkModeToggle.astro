@@ -1,0 +1,78 @@
+---
+// DarkModeToggle.astro
+import { Icon } from "astro-icon/components";
+import { css } from "../../styled-system/css";
+---
+
+<button
+  id="darkModeToggle"
+  aria-label="ダークモード切り替え"
+  class={css({
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    width: "2.5rem",
+    height: "2.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0.5rem",
+    borderRadius: "50%",
+    transition: "background-color 0.3s",
+    _hover: {
+      backgroundColor: {
+        base: "colors.gray.900",
+        _dark: "{colors.slate.200/10}",
+      },
+    },
+    position: "relative",
+  })}
+>
+  <Icon
+    name="mdi:white-balance-sunny"
+    class={css({
+      width: "1.5rem",
+      height: "1.5rem",
+      position: "absolute",
+      transition: "transform 0.3s ease",
+      opacity: "1",
+      transform: "scale(1)",
+      _dark: {
+        opacity: "0",
+        transform: "scale(0)",
+      },
+    })}
+  />
+  <Icon
+    name="mdi:weather-night"
+    class={css({
+      width: "1.5rem",
+      height: "1.5rem",
+      position: "absolute",
+      transition: "transform 0.3s ease",
+      opacity: "0",
+      transform: "scale(0)",
+      _dark: {
+        opacity: "1",
+        transform: "scale(1)",
+      },
+    })}
+  />
+</button>
+
+<script>
+import { darkModeStorageKey } from "@/utils/darkmode";
+
+  const button = document.getElementById("darkModeToggle");
+  const rootElement = document.documentElement;
+  // ダークモードを切り替える
+  const toggleDarkMode = () => {
+    const isDark = rootElement.classList.toggle("dark");
+    localStorage.setItem(darkModeStorageKey, isDark.toString());
+  };
+
+  // ボタンクリックイベントの設定
+  if (button) {
+    button.addEventListener("click", toggleDarkMode);
+  }
+</script>

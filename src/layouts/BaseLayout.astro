@@ -1,12 +1,54 @@
 ---
-import "~/styles/global.css";
+import BaseHead from "@/components/BaseHead.astro";
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+import "@/styles/global.css";
+import { css, cx } from "styled-system/css";
 ---
 
+<!doctype html>
 <html lang={Astro.currentLocale}>
   <head>
+    <BaseHead />
     <slot name="head" />
   </head>
-  <body>
+  <body
+    class={css({
+      color: "text",
+      backgroundColor: "background",
+    })}
+  >
+    <script is:inline>
+      function handleDarkMode() {
+        const rootElement = document.documentElement;
+        const darkModeStorageKey = "darkMode";
+
+        // LocalStorageから設定を読み込む
+        const loadDarkMode = () => {
+          const savedMode = localStorage.getItem(darkModeStorageKey);
+          if (savedMode === "true") {
+            rootElement.classList.add("dark");
+          } else if (savedMode === "false") {
+            rootElement.classList.remove("dark");
+          } else {
+            // 初期状態: システム設定に従う
+            const prefersLight = window.matchMedia(
+              "(prefers-color-scheme: light)"
+            ).matches;
+            if (!prefersLight) {
+              rootElement.classList.add("dark");
+              localStorage.setItem(darkModeStorageKey, "true");
+            }
+          }
+        };
+
+        // 初期ロード時に設定を適用
+        loadDarkMode();
+      }
+      handleDarkMode();
+    </script>
+    <Header />
     <slot />
+    <Footer />
   </body>
 </html>

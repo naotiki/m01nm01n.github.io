@@ -1,0 +1,191 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { css } from "styled-system/css";
+import { flex, grid, hstack, vstack } from "styled-system/patterns";
+import FormattedDate from "./FormattedDate.astro";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+interface Props {
+  member: CollectionEntry<"member">;
+}
+
+const { member } = Astro.props;
+const {
+  name,
+  realName,
+  description,
+  skills,
+  image,
+  x_twitter,
+  github,
+  website,
+} = member.data;
+
+// デフォルトのアバター画像
+const avatarImage = image || "/public/blog-placeholder-about.jpg";
+---
+
+<div
+  class={css({
+    borderRadius: "lg",
+    overflow: "hidden",
+    boxShadow: "md",
+    backgroundColor: "{colors.secondaryBackground}",
+    transition: "transform 0.3s ease",
+    _hover: {
+      transform: "translateY(-5px)",
+    },
+  })}
+>
+  <div
+    class={vstack({
+      height: "100%",
+      justifyContent: "space-between",
+      gap: "3",
+      p: "6",
+    })}
+  >
+    <div
+      class={hstack({
+        gap: "4",
+        alignItems: "center",
+      })}
+    >
+      <Image
+        src={avatarImage}
+        alt={`${name}のアバター`}
+        width={24}
+        height={24}
+        decoding="async"
+        loading="lazy"
+        class={css({
+          width: "24",
+          height: "24",
+          borderRadius: "full",
+          objectFit: "cover",
+        })}
+      />
+
+      <div>
+        <h3
+          class={css({
+            fontSize: "xl",
+            fontWeight: "bold",
+          })}
+        >
+          {name}
+        </h3>
+        {
+          realName && (
+            <p
+              class={css({
+                fontSize: "sm",
+                color: "text.secondary",
+              })}
+            >
+              {realName}
+            </p>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      description && (
+        <p
+          class={css({
+            fontSize: "md",
+            color: "text",
+          })}
+        >
+          {description}
+        </p>
+      )
+    }
+
+    <div
+      class={css({
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "2",
+      })}
+    >
+      {
+        skills &&
+          skills.map((skill) => (
+            <span
+              class={css({
+                px: "3",
+                py: "1",
+                borderRadius: "full",
+                fontSize: "xs",
+                fontWeight: "medium",
+                backgroundColor: {
+                  base: "gray.200",
+                  _dark: "gray.700",
+                },
+              })}
+            >
+              {skill}
+            </span>
+          ))
+      }
+    </div>
+
+    <div
+      class={hstack({
+        gap: "4",
+        justifyContent: "flex-start",
+      })}
+    >
+      {
+        github && (
+          <a
+            href={github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={css({
+              color: "text.secondary",
+              _hover: { color: "accent" },
+            })}
+            aria-label="GitHub"
+          >
+            <Icon name="fa6-brands:github" />
+          </a>
+        )
+      }
+      {
+        x_twitter && (
+          <a
+            href={x_twitter}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={css({
+              color: "text.secondary",
+              _hover: { color: "accent" },
+            })}
+            aria-label="Twitter/X"
+          >
+            <Icon name="fa6-brands:x-twitter" />
+          </a>
+        )
+      }
+      {
+        website && (
+          <a
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={css({
+              color: "text.secondary",
+              _hover: { color: "accent" },
+            })}
+            aria-label="個人サイト"
+          >
+            <Icon name="mdi:web" />
+          </a>
+        )
+      }
+    </div>
+  </div>
+</div>

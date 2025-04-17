@@ -1,0 +1,209 @@
+---
+import { css } from "styled-system/css";
+import FormattedDate from "./FormattedDate.astro";
+import type { CollectionEntry } from "astro:content";
+
+export type ContestWithMembers = CollectionEntry<"contests"> & {
+  members: CollectionEntry<"member">[];
+};
+
+interface Props {
+  contests: ContestWithMembers[];
+}
+const { contests } = Astro.props;
+---
+
+<div class={css({ overflowX: "auto" })}>
+  <table
+    class={css({
+      width: "full",
+      borderCollapse: "separate",
+      borderSpacing: "0",
+      mb: "6",
+    })}
+  >
+    <thead>
+      <tr>
+        <th
+          class={css({
+            py: "3",
+            px: "4",
+            textAlign: "left",
+            fontWeight: "semibold",
+            color: "gray.600",
+            borderBottom: "2px solid",
+            borderColor: "gray.200",
+            _dark: { color: "gray.300", borderColor: "gray.700" },
+          })}
+        >
+          CTF名
+        </th>
+        <th
+          class={css({
+            py: "3",
+            px: "4",
+            textAlign: "left",
+            fontWeight: "semibold",
+            color: "gray.600",
+            _dark: { color: "gray.300", borderColor: "gray.700" },
+            borderBottom: "2px solid",
+            borderColor: "gray.200",
+          })}
+        >
+          開催日
+        </th>
+        <th
+          class={css({
+            py: "3",
+            px: "4",
+            textAlign: "left",
+            fontWeight: "semibold",
+            color: "gray.600",
+            borderBottom: "2px solid",
+            borderColor: "gray.200",
+            _dark: { color: "gray.300", borderColor: "gray.700" },
+          })}
+        >
+          結果
+        </th>
+        <th
+          class={css({
+            py: "3",
+            px: "4",
+            textAlign: "left",
+            fontWeight: "semibold",
+            color: "gray.600",
+            _dark: { color: "gray.300", borderColor: "gray.700" },
+            borderBottom: "2px solid",
+            borderColor: "gray.200",
+          })}
+        >
+          参加メンバー
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        contests.map((contest) => (
+          <tr
+            class={css({
+              transition: "all 0.2s",
+              _hover: {
+                bg: "gray.50",
+                _dark: { bg: "gray.900" },
+              },
+            })}
+          >
+            <td
+              class={css({
+                py: "4",
+                px: "4",
+                borderBottom: "1px solid",
+                borderColor: "gray.100",
+                _dark: { borderColor: "gray.800" },
+                fontSize: "sm",
+                fontWeight: "medium",
+                _first: {
+                  borderTopLeftRadius: "lg",
+                },
+              })}
+            >
+              {contest.data.externalUrl ? (
+                <a
+                  href={contest.data.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={css({
+                    color: "blue.500",
+                    _dark: { color: "blue.300" },
+                    textDecoration: "none",
+                    _hover: { textDecoration: "underline" },
+                    fontWeight: "medium",
+                  })}
+                >
+                  {contest.data.title}
+                </a>
+              ) : (
+                contest.data.title
+              )}
+            </td>
+            <td
+              class={css({
+                py: "4",
+                px: "4",
+                borderBottom: "1px solid",
+                borderColor: "gray.100",
+                _dark: { borderColor: "gray.800", color: "gray.400" },
+                fontSize: "sm",
+                color: "gray.600",
+              })}
+            >
+              <FormattedDate date={contest.data.startDate} />
+              {!contest.data.endDate
+                .toDateString()
+                .includes(contest.data.startDate.toDateString()) && (
+                <>
+                  {" "}
+                  - <FormattedDate date={contest.data.endDate} />
+                </>
+              )}
+            </td>
+            <td
+              class={css({
+                py: "4",
+                px: "4",
+                borderBottom: "1px solid",
+                borderColor: "gray.100",
+                _dark: {
+                  borderColor: "gray.800",
+                  color: contest.data.highlighted ? "green.400" : "gray.300",
+                },
+                fontSize: "sm",
+                fontWeight: contest.data.highlighted ? "bold" : "normal",
+                color: contest.data.highlighted ? "green.600" : "gray.700",
+              })}
+            >
+              <span
+                class={css({
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  px: contest.data.highlighted ? "3" : "0",
+                  py: contest.data.highlighted ? "1" : "0",
+                  borderRadius: "full",
+                  bg: contest.data.highlighted ? "green.50" : "transparent",
+                  _dark: {
+                    bg: contest.data.highlighted ? "green.900" : "transparent",
+                  },
+                })}
+              >
+                {contest.data.result}
+              </span>
+            </td>
+            <td
+              class={css({
+                py: "4",
+                px: "4",
+                borderBottom: "1px solid",
+                borderColor: "gray.100",
+                _dark: { borderColor: "gray.800", color: "gray.400" },
+                fontSize: "sm",
+                color: "gray.600",
+                _last: {
+                  borderTopRightRadius: "lg",
+                },
+              })}
+            >
+              {contest.members.map((member, i) => (
+                <>
+                  {i > 0 && ", "}
+                  {member.data.name}
+                </>
+              ))}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

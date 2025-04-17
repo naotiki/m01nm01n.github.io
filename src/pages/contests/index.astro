@@ -1,0 +1,126 @@
+---
+import { css } from "styled-system/css";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import ContestTable, {
+  type ContestWithMembers,
+} from "../../components/ContestTable.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { getEntry } from "astro:content";
+import { getEntries } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// CTFデータを取得
+const allContests = await Promise.all(
+  (await getCollection("contests")).map(
+    async (c) =>
+      ({
+        ...c,
+        members: await getEntries(c.data.members),
+      }) satisfies ContestWithMembers
+  )
+);
+
+// 開催年ごとにグループ化
+const contestsByYear = allContests.reduce(
+  (acc, contest) => {
+    const year = contest.data.startDate.getFullYear();
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(contest);
+
+    return acc;
+  },
+  {} as Record<number, ContestWithMembers[]>
+);
+
+// 年を降順でソート
+const years = Object.keys(contestsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+// 各年のコンテストを開催日順にソート
+for (const year of years) {
+  contestsByYear[year].sort(
+    (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+  );
+}
+
+const title = "CTF参加実績";
+const description = "m01nm01nのCTF参加実績一覧";
+---
+
+<BaseLayout>
+  <main
+    class={css({
+      maxWidth: "7xl",
+      margin: "0 auto",
+      padding: "6",
+    })}
+  >
+    <h1
+      class={css({
+        fontSize: "4xl",
+        fontWeight: "bold",
+        mb: "8",
+        bgGradient: "to-r",
+        gradientFrom: "blue.500",
+        gradientTo: "purple.500",
+        bgClip: "text",
+        _dark: {
+          gradientFrom: "blue.300",
+          gradientTo: "purple.300",
+        },
+      })}
+    >
+      {title}
+    </h1>
+
+    {
+      years.map((year) => (
+        <section class={css({ mb: "12" })}>
+          <h2
+            class={css({
+              fontSize: "2xl",
+              fontWeight: "semibold",
+              mb: "6",
+              position: "relative",
+              display: "inline-block",
+              _after: {
+                content: '""',
+                position: "absolute",
+                bottom: "-8px",
+                left: "0",
+                width: "40%",
+                height: "3px",
+                bgGradient: "to-r",
+                gradientFrom: "blue.400",
+                gradientTo: "blue.200",
+                borderRadius: "full",
+                _dark: {
+                  gradientFrom: "blue.600",
+                  gradientTo: "blue.400",
+                },
+              },
+            })}
+          >
+            {year}年
+          </h2>
+          <div
+            class={css({
+              bg: "white",
+              _dark: { bg: "gray.800" },
+              borderRadius: "xl",
+              boxShadow: "sm",
+              p: { base: "2", md: "4" },
+            })}
+          >
+            <ContestTable contests={contestsByYear[year]} />
+          </div>
+        </section>
+      ))
+    }
+  </main>
+</BaseLayout>

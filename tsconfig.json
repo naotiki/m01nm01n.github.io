@@ -4,9 +4,10 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "strictNullChecks": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
+      "@/*": ["./src/*"],
+      "@styles/*": ["./src/styled-system/*"],
     }
   }
 }
