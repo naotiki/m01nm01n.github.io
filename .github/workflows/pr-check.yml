@@ -1,4 +1,4 @@
-name: CI
+name: PR Checks
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
