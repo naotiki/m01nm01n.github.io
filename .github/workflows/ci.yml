@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run type checks
+        run: pnpm astro check
+
+      - name: Run Biome lint
+        run: pnpm biome lint
+
+      - name: Run Biome lint with reviewdog
+        uses: reviewdog/action-lint@v1
+        with:
+          tool_name: 'biome'
+          level: 'error'
+          reporter: 'github-pr-review'
+          filter_mode: 'added'
