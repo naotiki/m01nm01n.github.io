@@ -3,9 +3,7 @@ import sitemap from "@astrojs/sitemap";
 // @ts-check
 import { defineConfig } from "astro/config";
 
-
 import icon from "astro-icon";
-
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,15 +13,13 @@ export default defineConfig({
     locales: ["ja", "en"],
     defaultLocale: "ja",
   },
-  experimental:
-  {
+  experimental: {
     fonts: [
       /* {
         provider: fontProviders.google(),
         name: "Roboto",
         cssVariable: "--font-roboto"
       } */
-    ]
-  }
-
+    ],
+  },
 });
