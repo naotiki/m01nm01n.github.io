@@ -1,18 +1,18 @@
 ---
-import { css } from "styled-system/css";
-import BaseHead from "../components/BaseHead.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
-import Hero from "../components/Hero.astro";
 import { getCollection, getEntries } from "astro:content";
-import MemberCard from "../components/MemberCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { css } from "styled-system/css";
 import { grid } from "styled-system/patterns";
+import BaseHead from "../components/BaseHead.astro";
 import ContestTable, {
   type ContestWithMembers,
 } from "../components/ContestTable.astro";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import MemberCard from "../components/MemberCard.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 
 const members = (await getCollection("member")).sort((a, b) =>
-  a.id.localeCompare(b.id)
+  a.id.localeCompare(b.id),
 );
 
 // CTFデータを取得
@@ -22,8 +22,8 @@ const allContests = await Promise.all(
       ({
         ...c,
         members: await getEntries(c.data.members),
-      }) satisfies ContestWithMembers
-  )
+      }) satisfies ContestWithMembers,
+  ),
 );
 
 // 開催日の新しい順にソート

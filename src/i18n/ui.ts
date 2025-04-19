@@ -1,8 +1,8 @@
 import type { languages } from "./lang";
 
-type UILabel = {};
+type UILabel = null;
 
 export const uiLabel: Record<string, UILabel> = {
-  ja: {},
-  en: {},
+  ja: null,
+  en: null,
 } satisfies Record<keyof typeof languages, UILabel>;

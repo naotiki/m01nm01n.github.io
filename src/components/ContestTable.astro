@@ -1,7 +1,7 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import { css } from "styled-system/css";
 import FormattedDate from "./FormattedDate.astro";
-import type { CollectionEntry } from "astro:content";
 
 export type ContestWithMembers = CollectionEntry<"contests"> & {
   members: CollectionEntry<"member">[];

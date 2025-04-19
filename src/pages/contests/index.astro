@@ -1,15 +1,15 @@
 ---
-import { css } from "styled-system/css";
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import ContestTable, {
-  type ContestWithMembers,
-} from "../../components/ContestTable.astro";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 import { getEntries } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { css } from "styled-system/css";
+import BaseHead from "../../components/BaseHead.astro";
+import ContestTable, {
+  type ContestWithMembers,
+} from "../../components/ContestTable.astro";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
 
 // CTFデータを取得
 const allContests = await Promise.all(
@@ -18,8 +18,8 @@ const allContests = await Promise.all(
       ({
         ...c,
         members: await getEntries(c.data.members),
-      }) satisfies ContestWithMembers
-  )
+      }) satisfies ContestWithMembers,
+  ),
 );
 
 // 開催年ごとにグループ化
@@ -33,7 +33,7 @@ const contestsByYear = allContests.reduce(
 
     return acc;
   },
-  {} as Record<number, ContestWithMembers[]>
+  {} as Record<number, ContestWithMembers[]>,
 );
 
 // 年を降順でソート
@@ -44,7 +44,7 @@ const years = Object.keys(contestsByYear)
 // 各年のコンテストを開催日順にソート
 for (const year of years) {
   contestsByYear[year].sort(
-    (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+    (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime(),
   );
 }
 

@@ -1,8 +1,8 @@
-import { defaultLanguage, languages } from "./lang";
+import { defaultLanguage, type languages } from "./lang";
 import { uiLabel } from "./ui";
 
 export function getUITranslations(
-  lang: keyof typeof languages | string | undefined
+  lang: keyof typeof languages | string | undefined,
 ) {
   return lang ? uiLabel[lang] : uiLabel[defaultLanguage];
 }
