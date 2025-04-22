@@ -1,0 +1,26 @@
+---
+import { markdownClassName } from "@/panda-styles/const";
+import { css } from "styled-system/css";
+import BaseLayout from "./BaseLayout.astro";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <link
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      rel="stylesheet"
+    />
+  </Fragment>
+  <main
+    class={css({
+      maxWidth: "7xl",
+      margin: "0 auto",
+      padding: "6",
+    })}
+  >
+    <slot name="top" />
+    <div class={markdownClassName}>
+      <slot />
+    </div>
+  </main>
+</BaseLayout>
