@@ -19,7 +19,7 @@ export const markdownStyle = {
     textDecoration: "none",
     color: "link",
     _hover: {
-      textDecoration: "{colors.border} underline",
+      textDecoration: "{colors.link} underline",
     },
   },
   table: {
