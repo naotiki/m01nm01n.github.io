@@ -1,0 +1,36 @@
+---
+import { Image } from "astro:assets";
+import { css } from "styled-system/css";
+
+interface Props {
+  name: string;
+  image?: string;
+}
+const { name, image } = Astro.props;
+---
+
+<div class={css({ display: "inline", alignItems: "center" })}>
+  {
+    image && (
+      <Image
+        src={image}
+        alt={name}
+        width={4}
+        height={4}
+        class={css({
+          display: "inline",
+          width: "4",
+          height: "4",
+          borderRadius: "full",
+          marginRight: "0.5",
+        })}
+      />
+    )
+  }
+  <span
+    class={css({
+      fontSize: "sm",
+      fontWeight: "semibold",
+    })}>{name}</span
+  >
+</div>
