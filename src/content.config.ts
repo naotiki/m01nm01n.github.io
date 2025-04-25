@@ -1,6 +1,5 @@
 import { defineCollection, reference, z } from "astro:content";
 import { glob } from "astro/loaders";
-
 const blog = defineCollection({
   // Load Markdown and MDX files in the `src/content/blog/` directory.
   loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
@@ -20,7 +19,7 @@ const contests = defineCollection({
   schema: z.object({
     // 大会タイトル
     title: z.string(),
-    // 開催された日付
+    // 開催された日時 (JST)
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     // 順位
@@ -30,12 +29,13 @@ const contests = defineCollection({
     // タグ
     tags: z.enum(["writeup"]).array(),
     members: z.array(reference("member")),
-    // 投稿日時
+    // 投稿日時 (JST)
     pubDate: z.coerce.date(),
     // heroImage
     heroImage: z.string().optional(),
     // 大会公式などのURL
     externalUrl: z.string().url().optional(),
+    ctfTimeUrl: z.string().url().optional(),
   }),
 });
 

@@ -1,0 +1,108 @@
+---
+import { getEntries } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import { date } from "astro:schema";
+import MemberBadge from "@/components/MemberBadge.astro";
+import MarkdownLayout from "@/layouts/MarkdownLayout.astro";
+import { Icon } from "astro-icon/components";
+import { format } from "date-fns";
+import { css } from "styled-system/css";
+export async function getStaticPaths() {
+  const contests = await getCollection("contests");
+  return contests.map((contest) => ({
+    params: { slug: contest.id },
+    props: contest,
+  }));
+}
+
+type Props = CollectionEntry<"contests">;
+const contest = Astro.props;
+const { Content } = await render(contest);
+
+const members = await getEntries(contest.data.members);
+---
+
+<MarkdownLayout>
+  <div>
+    <h1 class={css({ fontSize: "4xl", fontWeight: "bold" })}>
+      {contest.data.title}
+    </h1>
+    <div class={css({mb: "4" })}>
+      {members.map((member, i) => (
+        <>
+          {i > 0 && ", "}
+          
+          <MemberBadge name={member.data.name} image={member.data.image} />
+        </>
+      ))}
+    </div>
+    <div class={css({ display: "grid", gridTemplateColumns: "auto 1fr", gap:"{spacing.1} {spacing.4}"})}>
+       <span><Icon
+        name="mdi:calendar-clock"
+        class={css({
+          display: "inline",
+          fontSize: "2xl",
+          mr: "1",
+        })}
+      />開催期間(JST)</span> <span>{format(contest.data.startDate, "yyyy/MM/dd HH:mm")} - {
+        format(contest.data.endDate, "yyyy/MM/dd HH:mm")
+      }</span>
+      <span><Icon
+        name="mdi:medal"
+        class={css({
+          display: "inline",
+          fontSize: "2xl",
+          mr: "1",
+        })}
+      />結果</span> <span>
+        {contest.data.result}
+      </span>
+      {
+        contest.data.externalUrl && (
+            <span>
+              <Icon
+              name="mdi:web"
+              class={css({
+                display: "inline",
+                fontSize: "2xl",
+                mr: "1",
+              })}
+            />
+              CTF Website
+            </span>
+            <a
+              href={contest.data.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {contest.data.externalUrl}
+            </a>
+        )
+      }
+      {
+        contest.data.ctfTimeUrl && (
+            <span>
+              <Icon
+              name="mdi:flag"
+              class={css({
+                display: "inline",
+                fontSize: "2xl",
+                mr: "1",
+              })}
+            />
+              CTFTime
+            </span>
+            <a
+              href={contest.data.ctfTimeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {contest.data.ctfTimeUrl}
+            </a>
+        )
+      }
+    </div>
+  </div>
+  <hr class={css({margin:"{spacing.4} 0"})}/>
+  <Content />
+</MarkdownLayout>
