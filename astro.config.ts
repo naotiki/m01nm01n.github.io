@@ -13,7 +13,8 @@ import { defineConfig } from "astro/config";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
-import type { Node, Root, Text } from "mdast";
+import type { Image, Node, Root, Text } from "mdast";
+import { remarkImageSizePlugin } from "remark-image-extended";
 import { visit } from "unist-util-visit";
 import { markdownHeadingsAnchorClassName } from "./src/panda-styles/const";
 // https://astro.build/config
@@ -53,7 +54,8 @@ export default defineConfig({
       rehypeKatex,
     ],
     remarkPlugins: [
-      remarkDirective,
+      remarkImageSizePlugin,
+      // remarkDirective,
       myDirectivePlugin,
       remarkBreaks,
       remarkMath,
