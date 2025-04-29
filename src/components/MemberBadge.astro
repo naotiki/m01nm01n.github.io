@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { css } from "styled-system/css";
 
 interface Props {
   name: string;
-  image?: string;
+  image?: ImageMetadata;
 }
 const { name, image } = Astro.props;
 ---
@@ -15,8 +16,8 @@ const { name, image } = Astro.props;
       <Image
         src={image}
         alt={name}
-        width={4}
-        height={4}
+        width={32}
+        height={32}
         class={css({
           display: "inline",
           width: "4",
