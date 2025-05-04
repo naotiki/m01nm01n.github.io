@@ -10,12 +10,11 @@ import remarkMath from "remark-math";
 
 import { defineConfig } from "astro/config";
 
-import type { number } from "astro:schema";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import type { RemarkPlugins } from "astro";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
-import type { Root } from "mdast";
+import type { Image, Node, Root, Text } from "mdast";
+import { remarkImageSizePlugin } from "remark-image-extended";
 import { visit } from "unist-util-visit";
 import { markdownHeadingsAnchorClassName } from "./src/panda-styles/const";
 // https://astro.build/config
@@ -57,6 +56,7 @@ export default defineConfig({
     remarkPlugins: [
       remarkDirective,
       myDirectivePlugin,
+      remarkImageSizePlugin,
       remarkBreaks,
       remarkMath,
     ],
@@ -65,12 +65,12 @@ export default defineConfig({
 
 function myDirectivePlugin() {
   return (tree: Root) => {
-    visit(tree, (node) => {
-      if (
-        node.type === "containerDirective" ||
-        node.type === "leafDirective" ||
-        node.type === "textDirective"
-      ) {
+    visit(tree, (node, index, parent) => {
+      if (node.type === "textDirective") {
+        (node as Node).type = "text";
+        (node as Node as Text).value = `:${node.name}`;
+      }
+      if (node.type === "containerDirective" || node.type === "leafDirective") {
         const [name, ...n] = node.name.split("_");
         let value: string | null = null;
         if (n.length > 0) {
@@ -85,7 +85,7 @@ function myDirectivePlugin() {
             if (!node.data) {
               node.data = {};
             }
-            const tagName = node.type === "textDirective" ? "span" : "div";
+            const tagName = "div";
 
             node.data.hName = tagName;
 
