@@ -15,7 +15,16 @@ const blog = defineCollection({
 });
 
 const contests = defineCollection({
-  loader: glob({ base: "./src/content/contests", pattern: "**/*.{md,mdx}" }),
+  loader: glob({
+    base: "./src/content/contests",
+    pattern: "{*/index.{md,mdx},*.{md,mdx}}",
+    generateId: ({ entry }) => {
+      if (entry.includes("/")) {
+        return entry.split("/")[0];
+      }
+      return entry.replace(/\.mdx?$/, "");
+    },
+  }),
   schema: ({ image }) =>
     z.object({
       // 大会タイトル
@@ -40,8 +49,44 @@ const contests = defineCollection({
     }),
 });
 
+//表記揺れ防止
+const categories = [
+  "welcome",
+  "pwn",
+  "rev",
+  "web",
+  "crypto",
+  "osint",
+  "forensics",
+  "web3",
+  "misc",
+] as const;
+const categoriesSchema = z.enum(categories);
+
+const writeup = defineCollection({
+  loader: glob({
+    base: "./src/content/contests",
+    pattern: "*/writeup/*.{md,mdx}",
+  }),
+  schema: () =>
+    z.object({
+      contest: reference("contests"),
+      title: z.string(),
+      // + をつけると、任意のカテゴリ名(非推奨)
+      category: categoriesSchema
+        .or(z.string().startsWith("+"))
+        .transform((t) => {
+          if (t.startsWith("+")) {
+            return t.slice(1);
+          }
+          return t;
+        }),
+      author: reference("member"),
+    }),
+});
+
 const member = defineCollection({
-  loader: glob({ base: "./src/content/members", pattern: "**/*.{md,mdx}" }),
+  loader: glob({ base: "./src/content/members", pattern: "*.{md,mdx}" }),
   schema: ({ image }) =>
     z.object({
       // 名前 (表示用)
@@ -59,4 +104,4 @@ const member = defineCollection({
     }),
 });
 
-export const collections = { blog, member, contests };
+export const collections = { blog, member, contests, writeup };

@@ -1,7 +1,7 @@
 ---
 import { getEntries } from "astro:content";
 import { type CollectionEntry, getCollection, render } from "astro:content";
-import { date } from "astro:schema";
+import { getEntry } from "astro:content";
 import MemberBadge from "@/components/MemberBadge.astro";
 import MarkdownLayout from "@/layouts/MarkdownLayout.astro";
 import { Icon } from "astro-icon/components";
@@ -20,6 +20,44 @@ const contest = Astro.props;
 const { Content } = await render(contest);
 
 const members = await getEntries(contest.data.members);
+
+// Writeupの取得
+const writeupCollection = await Promise.all(
+  (
+    await getCollection("writeup", (d) => {
+      return d.data.contest.id === contest.id;
+    })
+  ).map(async (w) => ({
+    ...w,
+    author: await getEntry(w.data.author),
+  })),
+);
+
+const hasWriteup = writeupCollection.length > 0;
+
+const writeupCategorized = Object.groupBy(
+  writeupCollection.map((w) => ({
+    category: w.data.category,
+    id: w.id,
+    title: w.data.title,
+    author: w.author,
+  })),
+  (writeup) => {
+    return writeup.category;
+  },
+);
+
+// Writeup(md,mdx)のレンダリング
+const writeupRenderedList = await Promise.all(
+  writeupCollection.map(async (writeup) => {
+    const { Content } = await render(writeup);
+    return {
+      ...writeup,
+      author: await getEntry(writeup.data.author),
+      content: Content,
+    };
+  }),
+);
 ---
 
 <MarkdownLayout>
@@ -105,4 +143,44 @@ const members = await getEntries(contest.data.members);
   </div>
   <hr class={css({margin:"{spacing.4} 0"})}/>
   <Content />
+  {hasWriteup && (<><h1>Writeup</h1>
+  <div> 
+    {
+      Object.entries(writeupCategorized).map(([category, writeups]) => (
+          <div>
+          <p class={css({
+            fontSize: "2xl",
+            fontWeight: "bold",
+          })}>{category}</p>
+          <ul>
+            {writeups?.map((writeup) => (
+              <li>
+                <a href={`#${writeup.id}`}>{writeup.title} by <MemberBadge name={writeup.author.data.name} image={writeup.author.data.image}/></a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+  <hr class={css({margin:"{spacing.4} 0",color:"border"})}/>
+ <div>
+  {
+    writeupRenderedList.map(w=>(<div class="markdown" id={w.id}>
+      <div class={css({marginBottom:"4"})}>
+        <h2>
+          <a class="headings-anchor" href={`#${w.id}`}>{w.data.title}</a>
+        </h2>
+        category: {w.data.category} <br/>
+        author: <MemberBadge name={w.author.data.name} image={w.author.data.image}></MemberBadge> <br/>
+      </div>
+
+      <w.content/>
+
+      <hr class={css({margin:"{spacing.4} 0",color:"border"})}/>
+    </div>))
+  }
+ </div>
+  </>
+  )}
 </MarkdownLayout>
