@@ -54,9 +54,9 @@ export default defineConfig({
       rehypeKatex,
     ],
     remarkPlugins: [
-      remarkImageSizePlugin,
-      // remarkDirective,
+      remarkDirective,
       myDirectivePlugin,
+      remarkImageSizePlugin,
       remarkBreaks,
       remarkMath,
     ],

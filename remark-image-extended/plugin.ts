@@ -3,7 +3,7 @@ import { visit } from "unist-util-visit";
 // 画像サイズ指定用remarkプラグイン
 export function remarkImageSizePlugin() {
   return (tree: Root) => {
-    const extendedImageRegex = /^(?<alt>.*) \{(?<style>.+:.+(;.+:.+)?)\}$/gm;
+    const extendedImageRegex = /^(?<alt>.*) \{(?<style>.+=.+(;.+=.+)?)\}$/gm;
     visit(tree, "image", (node) => {
       if (!node.alt) return;
 
@@ -15,7 +15,7 @@ export function remarkImageSizePlugin() {
         alt,
         data: {
           hProperties: {
-            style: style,
+            style: style.replaceAll("=", ":"),
           },
         },
       } satisfies Partial<Image>);

@@ -73,4 +73,20 @@ hello
 \mathrm{block}  \ \KaTeX \\
 \int_0^\infty \frac{1}{x^2} \, dx
 ```
+# 「`:`」テスト
+localhost:8080 ← `localhost:8080`と表示されるか
 
+---
+
+
+# 画像の拡張記法
+```md
+![m01nm01n {width=50%;margin=auto}](../assets/m01nm01n-logo.png)
+```
+
+`<alt> {style1=value1;style2=value2}`のようにすると画像にスタイルを付与できる。
+`:`(コロン)ではなく`=`なので注意
+
+
+
+![m01nm01n {width=50%;margin=auto}](../assets/m01nm01n-logo.png)
