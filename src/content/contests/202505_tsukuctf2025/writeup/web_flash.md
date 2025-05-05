@@ -1,12 +1,7 @@
 ---
-# ../../のフォルダ名
 contest: 202505_tsukuctf2025
-# 任意
 title: flash
-# src/content.config.tsにあるカテゴリ名を使用。 先頭に+をつけると任意のカテゴリ名を使用可能だが非推奨
-# 例: category: +brainrot
 category: web
-# membersにある自分の名前
 author: naotiki
 ---
 
