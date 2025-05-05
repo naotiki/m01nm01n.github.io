@@ -35,28 +35,22 @@ const writeupCollection = await Promise.all(
 
 const hasWriteup = writeupCollection.length > 0;
 
-const writeupCategorized = Object.groupBy(
-  writeupCollection.map((w) => ({
-    category: w.data.category,
-    id: w.id,
-    title: w.data.title,
-    author: w.author,
-  })),
-  (writeup) => {
-    return writeup.category;
-  },
-);
+const writeupCategorized = Object.groupBy(writeupCollection, (writeup) => {
+  return writeup.data.category;
+});
 
 // Writeup(md,mdx)のレンダリング
 const writeupRenderedList = await Promise.all(
-  writeupCollection.map(async (writeup) => {
-    const { Content } = await render(writeup);
-    return {
-      ...writeup,
-      author: await getEntry(writeup.data.author),
-      content: Content,
-    };
-  }),
+  Object.values(writeupCategorized)
+    .flat()
+    .filter((e) => e !== undefined)
+    .map(async (writeup) => {
+      const { Content } = await render(writeup);
+      return {
+        ...writeup,
+        content: Content,
+      };
+    }),
 );
 ---
 
@@ -155,7 +149,7 @@ const writeupRenderedList = await Promise.all(
           <ul>
             {writeups?.map((writeup) => (
               <li>
-                <a href={`#${writeup.id}`}>{writeup.title} by <MemberBadge name={writeup.author.data.name} image={writeup.author.data.image}/></a>
+                <a href={`#${writeup.id}`}>{writeup.data.title} by <MemberBadge name={writeup.author.data.name} image={writeup.author.data.image}/></a>
               </li>
             ))}
           </ul>
