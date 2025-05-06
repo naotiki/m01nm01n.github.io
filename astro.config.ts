@@ -58,7 +58,7 @@ export default defineConfig({
             if (
               path.matchesGlob(relativePath, "src/content/contests/*/writeup")
             ) {
-              return file.data.astro?.frontmatter?.contest;
+              return relativePath;
             }
             return undefined;
           },
