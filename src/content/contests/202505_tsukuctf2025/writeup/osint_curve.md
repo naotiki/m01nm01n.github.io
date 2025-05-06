@@ -10,13 +10,13 @@ author: naotiki
 フラグはこの場所のWebサイトのドメインです。
 例: `TsukuCTF25{example.com}`
 
-![curve {width=30vmax;margin=auto}](./images/curve.jpg)
+![curve "width=30vmax;margin=auto"](./images/curve.jpg)
 
 Google Lensで調べると、どうやらスパイラルエスカレーターという珍しいエスカレーターらしい
 
 スパイラルエスカレーターで検索して画像を漁っていると・・・
 
-![google screenshot {width=30vmax;margin=auto}](./images/curve_2.png)
+![google screenshot "width=30vmax;margin=auto"](./images/curve_2.png)
 
 エスカレーターの警告表示(?)が似ている
 

@@ -40,7 +40,38 @@ export const markdownStyle = {
     lineHeight: "1.5",
     color: "text",
   },
-
+  "ul, ol": {
+    listStylePosition: "inside",
+  },
+  // - [x]の回避
+  "ul:not(:has(input))": {
+    listStyleType: "disc",
+  },
+  ol: {
+    listStyleType: "decimal",
+  },
+  "ul ul, ol ul": {
+    listStyleType: "circle",
+    listStylePosition: "inside",
+    marginLeft: "5",
+  },
+  "ol ol, ul ol": {
+    listStyleType: "lower-latin",
+    listStylePosition: "inside",
+    marginLeft: "5",
+  },
+  ".expressive-code": {
+    margin: { base: "2", md: "5" },
+  },
+  img: {
+    margin: "2",
+  },
+  ":not(pre) > code": {
+    color: "red.500",
+    backgroundColor: "{colors.slate.500/20}",
+    padding: "1",
+    borderRadius: "0.5rem",
+  },
   // Note (Aside)
   /**
    * :::note_(warn|info|alert|success)
