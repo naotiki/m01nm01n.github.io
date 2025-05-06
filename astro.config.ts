@@ -1,21 +1,26 @@
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { h } from "hastscript";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeAutolinkHeadings, { type Options } from "rehype-autolink-headings";
 import rehypeKatex from "rehype-katex";
-import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
 
 import { defineConfig } from "astro/config";
 
+import path from "node:path";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
-import type { Image, Node, Root, Text } from "mdast";
+import GithubSlugger from "github-slugger";
+import type { HRoot } from "hast";
+import { headingRank } from "hast-util-heading-rank";
+import { toString as hastToString } from "hast-util-to-string";
+import type { Root as MRoot, Node, Text } from "mdast";
 import { remarkImageSizePlugin } from "remark-image-extended";
 import { visit } from "unist-util-visit";
+import type { VFile } from "vfile";
 import { markdownHeadingsAnchorClassName } from "./src/panda-styles/const";
 // https://astro.build/config
 export default defineConfig({
@@ -43,19 +48,34 @@ export default defineConfig({
   },
   markdown: {
     rehypePlugins: [
-      rehypeSlug,
+      //rehypeSlug,
+      [
+        groupingSlug,
+        {
+          group(file) {
+            if (!file.dirname) return undefined;
+            const relativePath = path.relative(file.cwd, file.dirname);
+            if (
+              path.matchesGlob(relativePath, "src/content/contests/*/writeup")
+            ) {
+              return file.data.astro?.frontmatter?.contest;
+            }
+            return undefined;
+          },
+        } satisfies GroupSlugOptions,
+      ],
       [
         rehypeAutolinkHeadings,
         {
           behavior: "wrap",
           properties: { className: [markdownHeadingsAnchorClassName] },
-        },
+        } satisfies Options,
       ],
       rehypeKatex,
     ],
     remarkPlugins: [
       remarkDirective,
-      myDirectivePlugin,
+      appDirectivePlugin,
       remarkImageSizePlugin,
       remarkBreaks,
       remarkMath,
@@ -63,8 +83,8 @@ export default defineConfig({
   },
 });
 
-function myDirectivePlugin() {
-  return (tree: Root) => {
+function appDirectivePlugin() {
+  return (tree: MRoot) => {
     visit(tree, (node, index, parent) => {
       if (node.type === "textDirective") {
         (node as Node).type = "text";
@@ -96,6 +116,33 @@ function myDirectivePlugin() {
           default:
             break;
         }
+      }
+    });
+  };
+}
+
+interface GroupSlugOptions {
+  group?(file: VFile): string | undefined;
+}
+
+const defaultSlugs = new GithubSlugger();
+const slagsMap = new Map<string, GithubSlugger>();
+function groupingSlug(options: GroupSlugOptions) {
+  return (tree: HRoot, file: VFile) => {
+    let slugs = defaultSlugs;
+    const group = options.group?.(file);
+    if (group !== undefined) {
+      if (!slagsMap.has(group)) {
+        slagsMap.set(group, new GithubSlugger());
+      }
+      slugs = slagsMap.get(group) ?? defaultSlugs;
+    } else {
+      defaultSlugs.reset();
+    }
+
+    visit(tree, "element", (node) => {
+      if (headingRank(node) && !node.properties.id) {
+        node.properties.id = slugs.slug(hastToString(node));
       }
     });
   };

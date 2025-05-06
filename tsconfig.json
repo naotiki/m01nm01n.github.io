@@ -8,6 +8,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@styles/*": ["./src/styled-system/*"]
-    }
+    },
+    "types": ["@types/hast", "@types/node"]
   }
 }
