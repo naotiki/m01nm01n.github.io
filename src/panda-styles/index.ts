@@ -5,32 +5,25 @@ import { c } from "./utils";
 
 export const globalStyles = defineGlobalStyles({
   h1: {
-    fontSize: "5xl",
-    mt: "1rem",
-    lineHeight: 1.4,
+    fontSize: "4xl",
   },
   h2: {
-    fontSize: "4xl",
-    mt: "1rem",
-    lineHeight: 1.4,
+    fontSize: "3xl",
   },
   h3: {
-    fontSize: "3xl",
-    mt: "1rem",
-    lineHeight: 1.4,
+    fontSize: "2xl",
   },
   h4: {
-    fontSize: "2xl",
-    mt: "1rem",
-    lineHeight: 1.4,
+    fontSize: "xl",
   },
   h5: {
-    fontSize: "xl",
-    mt: "1rem",
-    lineHeight: 1.4,
+    fontSize: "lg",
   },
   h6: {
-    fontSize: "lg",
+    fontSize: "md",
+  },
+  "h1, h2, h3, h4, h5, h6": {
+    fontWeight: "bold",
     mt: "1rem",
     lineHeight: 1.4,
   },
