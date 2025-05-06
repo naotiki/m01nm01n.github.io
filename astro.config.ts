@@ -14,7 +14,7 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import GithubSlugger from "github-slugger";
-import type { HRoot } from "hast";
+import type { Root as HRoot } from "hast";
 import { headingRank } from "hast-util-heading-rank";
 import { toString as hastToString } from "hast-util-to-string";
 import type { Root as MRoot, Node, Text } from "mdast";
