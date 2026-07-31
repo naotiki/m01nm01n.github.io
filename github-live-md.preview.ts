@@ -7,6 +7,7 @@ import remarkDirective from "remark-directive";
 import remarkGemoji from "remark-gemoji";
 import { remarkImageSizePlugin } from './remark-image-extended/index.ts'
 import { visit } from "unist-util-visit";
+import { h } from "hastscript";
 export default {
 	remarkPlugins: [
     remarkDirective,
