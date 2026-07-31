@@ -7,7 +7,7 @@ import remarkDirective from "remark-directive";
 import remarkGemoji from "remark-gemoji";
 import remarkMath from "remark-math";
 import { visit } from "unist-util-visit";
-import pandaConfig from "./panda.config";
+import pandaConfig from "./panda.config.ts";
 import { remarkImageSizePlugin } from "./remark-image-extended/index.ts";
 export default {
   previewClassName: "markdown",
