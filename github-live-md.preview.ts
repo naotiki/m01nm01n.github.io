@@ -3,6 +3,8 @@ import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
 import remarkBreaks from 'remark-breaks'
 import remarkMath from 'remark-math'
+import remarkDirective from "remark-directive";
+import remarkGemoji from "remark-gemoji";
 import { remarkImageSizePlugin } from './remark-image-extended/index.ts'
 
 export default {
