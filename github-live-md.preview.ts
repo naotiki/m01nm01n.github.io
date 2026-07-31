@@ -1,28 +1,31 @@
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypeKatex from 'rehype-katex'
-import rehypeSlug from 'rehype-slug'
-import remarkBreaks from 'remark-breaks'
-import remarkMath from 'remark-math'
+import { h } from "hastscript";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeKatex from "rehype-katex";
+import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
 import remarkDirective from "remark-directive";
 import remarkGemoji from "remark-gemoji";
-import { remarkImageSizePlugin } from './remark-image-extended/index.ts'
+import remarkMath from "remark-math";
 import { visit } from "unist-util-visit";
-import { h } from "hastscript";
+import pandaConfig from "./panda.config";
+import { remarkImageSizePlugin } from "./remark-image-extended/index.ts";
 export default {
-	remarkPlugins: [
+  previewClassName: "markdown",
+
+  panda: {
+    config: pandaConfig,
+  },
+
+  remarkPlugins: [
     remarkDirective,
     appDirectivePlugin,
-		remarkImageSizePlugin,
-		remarkBreaks,
-		remarkMath,
-    remarkGemoji
-	],
-	rehypePlugins: [
-		rehypeSlug,
-		rehypeAutolinkHeadings,
-		rehypeKatex,
-	],
-}
+    remarkImageSizePlugin,
+    remarkBreaks,
+    remarkMath,
+    remarkGemoji,
+  ],
+  rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings, rehypeKatex],
+};
 
 function appDirectivePlugin() {
   return (tree: MRoot) => {
